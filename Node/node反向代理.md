@@ -13,7 +13,7 @@
   $ npm install --save-dev express http-proxy-middleware connect-timeout
   ```
 
-- App.js
+- `App.js`
 
   ```js
   const express = require('express');
@@ -60,9 +60,54 @@
 
 - 前端代码
 
-  需要代理的url 配置为  `api/${url}`
+  - 正式环境配置
+
+    正式环境需要代理的url 配置为  `api/${url}`
+
+    config/prod.env.js
+
+    ```js
+    'use strict'
+    module.exports = {
+      NODE_ENV: '"production"',
+      BASE_API: '"/api"',
+    }
+    
+    ```
+
+  - 开发环境配置
+
+    `config/dev.env.js`
+
+    ```js
+    'use strict'
+    const merge = require('webpack-merge')
+    const prodEnv = require('./prod.env')
+    
+    module.exports = merge(prodEnv, {
+      NODE_ENV: '"development"',
+      BASE_API: '"/api"',
+    })
+    
+    ```
+
+
+
+    `config/index.js`
+
+    ```js
+      proxyTable: {
+        '/api': {
+          target: 'http://0.0.0.0:9526/api', // 接口的域名
+          // secure: false,  // 如果是https接口，需要配置这个参数
+          changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
+          pathRewrite: {
+            '^/api': ''
+          }
+        }
+      },
+    ```
 
 - 文件位置
 
-  webpack打包完的static放入public文件夹 ，index.html放入views文件夹
-
+  webpack打包完的`dist/static`放入`public`文件夹 ，`dist/index.html`放入`views`文件夹
