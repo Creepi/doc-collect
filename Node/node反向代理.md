@@ -58,6 +58,15 @@
   });
   ```
 
+- post请求发送失败问题
+
+  下列代码放在proxy设置之后
+
+  ```js
+  app.use(express.json());
+  app.use(express.urlencoded());
+  ```
+
 - 前端代码
 
   - 正式环境配置
@@ -94,7 +103,7 @@
 
 
     `config/index.js`
-
+    
     ```js
       proxyTable: {
         '/api': {
